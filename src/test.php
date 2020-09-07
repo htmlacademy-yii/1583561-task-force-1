@@ -1,7 +1,5 @@
 <?php
 
-spl_autoload_register();
-
 include_once "../vendor/autoload.php";
 
 use TaskForce\Task;

@@ -5,7 +5,7 @@
 
 Запуск:
 ```bash
-$ composer dump-autoload
+$ composer install
 $ cd src
 $ php test.php
 ```
