@@ -9,6 +9,6 @@ assert($task->getAvaliableActions(Task::STATUS_NEW, Task::ROLE_CONTRACTOR)[0] ==
 assert($task->getAvaliableActions(Task::STATUS_NEW, Task::ROLE_CLIENT)[0] == [Task::ACTION_CANCEL][0]);
 
 $task->setStatus(Task::STATUS_NEW);
-assert($task->getNextStatus(Task::ACTION_CANCEL) == Task::STATUS_CANCELED);
+assert($task->getNextStatus(Task::ACTION_CANCEL) === [Task::STATUS_CANCELED]);
 
-assert($task->getReadableNamesMap()[Task::STATUS_CANCELED] == 'Отменено');
+assert($task::READABLE_NAMES_MAP_STATUS[Task::STATUS_CANCELED] == 'Отменено');

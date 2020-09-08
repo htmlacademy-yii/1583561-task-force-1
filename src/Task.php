@@ -2,19 +2,37 @@
 
 namespace TaskForce;
 
+/**
+ * Class Task
+ * Класс описывает сущность предметной области "Задание". Хранит информацию
+ * о статусе задания и позволяет возвращать доступные действия и результат
+ * их выполнения.
+ * @package TaskForce
+ */
 class Task {
-  const STATUS_NEW = 'status_new'; // Новое - Задание опубликовано, исполнитель ещё не найден
-  const STATUS_CANCELED = 'status_canceled'; // Отменено - Заказчик отменил задание
-  const STATUS_IN_PROGRESS = 'status_in_progress'; // В работе - Заказчик выбрал исполнителя для задания
-  const STATUS_COMPLETED = 'status_completed'; // Выполнено - Заказчик отметил задание как выполненное
-  const STATUS_FAILED = 'status_failed'; // Провалено - Исполнитель отказался от выполнения задания
+  // Новое - Задание опубликовано, исполнитель ещё не найден
+  const STATUS_NEW = 'status_new';
+  // Отменено - Заказчик отменил задание
+  const STATUS_CANCELED = 'status_canceled';
+  // В работе - Заказчик выбрал исполнителя для задания
+  const STATUS_IN_PROGRESS = 'status_in_progress';
+  // Выполнено - Заказчик отметил задание как выполненное
+  const STATUS_COMPLETED = 'status_completed';
+  // Провалено - Исполнитель отказался от выполнения задания
+  const STATUS_FAILED = 'status_failed';
 
+  // Отменить задание
   const ACTION_CANCEL = 'action_cancel';
+  // Откликнуться на задание
   const ACTION_RESPOND = 'action_respond';
+  // Отказаться от задания
   const ACTION_DECLINE = 'action_decline';
+  // Закончить задание
   const ACTION_COMPLETE = 'action_complete';
 
+  // Роль исполнителя
   const ROLE_CONTRACTOR = 'role_contractor';
+  // Роль заказчика
   const ROLE_CLIENT = 'role_client';
   
   const READABLE_NAMES_MAP_STATUS = [
@@ -36,17 +54,7 @@ class Task {
     self::ROLE_CLIENT => 'Заказчик',
     self::ROLE_CONTRACTOR => 'Исполнитель'
   ];
-
-  /**
-   * Возвращает массив, соотносящий константы класса с человекочитаемыми именами
-   * @return array Ассоциативный массив, соотносящий константы класса с человекочитаемыми
-   * именами
-   */
-  public function getReadableNamesMap() {
-    return array_merge(READABLE_NAMES_MAP_STATUS,
-      READABLE_NAMES_MAP_ACTION, READABLE_NAMES_MAP_ROLE);
-  }
-
+  
   private $contractorId;
   private $clientId;
 
@@ -54,7 +62,8 @@ class Task {
 
   /**
    * Устанавливает новый статус задания
-   * @param $status
+   * @param string $status Новый статус
+   * Константа класса, начинающаяся со STATUS_
    */
   public function setStatus($status) {
     $this->status = $status;
@@ -63,8 +72,10 @@ class Task {
   /**
    * Вовзращает следующий статус задания с учётом текущего статуса
    * и действия, передаваемого параметром
-   * @param $action Действие, приводящее к смене статуса
+   * @param string $action Действие, приводящее к смене статуса
+   * Константа класса, начинающаяся с ACTION_
    * @return array Статус задания в результате действия
+   * Константа класса, начинающаяся со STATUS_
    */
   public function getNextStatus($action) {
     switch ($action) {
@@ -104,8 +115,10 @@ class Task {
 
   /**
    * Возвращает список доступных действий с учётом статуса и роли актора
-   * @param $status Статус, для которого необходимо получить список доступных действий
-   * @param $role Роль субъекта, изменяющего статус
+   * @param string $status Статус, для которого необходимо получить список доступных действий.
+   * Константа класса, начинающаяся со STATUS_
+   * @param string $role Роль субъекта, изменяющего статус
+   * Константа класса, начинающаяся с ROLE_
    * @return array Массив доступных действий
    */
   public function getAvaliableActions($status, $role) {
@@ -133,8 +146,8 @@ class Task {
 
   /**
    * Task constructor.
-   * @param $contractorId Идентификатор исполнителя
-   * @param $clientId Идентификатор заказчика
+   * @param int $contractorId Идентификатор исполнителя
+   * @param int $clientId Идентификатор заказчика
    */
   public function __construct($contractorId, $clientId) {
     $this->contractorId = $contractorId;
