@@ -1,26 +1,21 @@
 <?php
 
 
-namespace TaskForce;
+namespace TaskForce\actions;
 
 
-class ActionComplete extends AbstractAction {
-  
+abstract class AbstractAction {
   /**
    * Возвращает человекочитаемое имя действия
    * @return string
    */
-  function ReadableName() {
-    return 'Завершить';
-  }
+  abstract function getReadableName();
   
   /**
    * Возвращает внутреннее имя действия
    * @return string
    */
-  function InnerName() {
-    return 'action_complete';
-  }
+  abstract function getInnerName();
   
   /**
    * @param int $contractorId Идентификатор исполнителя
@@ -28,7 +23,5 @@ class ActionComplete extends AbstractAction {
    * @param int $currentUserId Идентификатор текущего пользователя
    * @return boolean True, если это действие возможно
    */
-  function CheckAccess($contractorId, $clientId, $currentUserId) {
-    return $clientId == $currentUserId;
-  }
+  abstract function checkAccess($contractorId, $clientId, $currentUserId);
 }

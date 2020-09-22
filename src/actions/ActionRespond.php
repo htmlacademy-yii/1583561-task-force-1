@@ -1,25 +1,25 @@
 <?php
 
 
-namespace TaskForce;
+namespace TaskForce\actions;
 
 
-class ActionDecline extends AbstractAction {
+class ActionRespond extends AbstractAction {
   
   /**
    * Возвращает человекочитаемое имя действия
    * @return string
    */
-  function ReadableName() {
-    return 'Отказаться';
+  function getReadableName() {
+    return 'Откликнуться';
   }
   
   /**
    * Возвращает внутреннее имя действия
    * @return string
    */
-  function InnerName() {
-    return 'action_decline';
+  function getInnerName() {
+    return 'action_respond';
   }
   
   /**
@@ -28,7 +28,7 @@ class ActionDecline extends AbstractAction {
    * @param int $currentUserId Идентификатор текущего пользователя
    * @return boolean True, если это действие возможно
    */
-  function CheckAccess($contractorId, $clientId, $currentUserId) {
-    return $currentUserId === $contractorId;
+  function checkAccess($contractorId, $clientId, $currentUserId) {
+    return true;
   }
 }

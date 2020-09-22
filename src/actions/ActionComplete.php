@@ -1,26 +1,25 @@
 <?php
 
 
-namespace TaskForce;
+namespace TaskForce\actions;
 
 
-class ActionCancel extends AbstractAction {
-  
+class ActionComplete extends AbstractAction {
   
   /**
    * Возвращает человекочитаемое имя действия
    * @return string
    */
-  function ReadableName() {
-    return 'Отменить';
+  function getReadableName() {
+    return 'Завершить';
   }
   
   /**
    * Возвращает внутреннее имя действия
    * @return string
    */
-  function InnerName() {
-    return 'action_cancel';
+  function getInnerName() {
+    return 'action_complete';
   }
   
   /**
@@ -29,7 +28,7 @@ class ActionCancel extends AbstractAction {
    * @param int $currentUserId Идентификатор текущего пользователя
    * @return boolean True, если это действие возможно
    */
-  function CheckAccess($contractorId, $clientId, $currentUserId) {
-    return $clientId === $currentUserId;
-   }
+  function checkAccess($contractorId, $clientId, $currentUserId) {
+    return $clientId == $currentUserId;
+  }
 }

@@ -2,6 +2,12 @@
 
 namespace TaskForce;
 
+use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionRespond;
+use TaskForce\actions\ActionDecline;
+use TaskForce\actions\ActionComplete;
+
+
 /**
  * Class Task
  * Класс описывает сущность предметной области "Задание". Хранит информацию
@@ -62,25 +68,25 @@ class Task {
    */
   public function getNextStatus($action) {
     if ($action instanceof ActionCancel) {
-      if ($this->status === self::STATUS_NEW) {
+      if ($this->status == self::STATUS_NEW) {
         return [self::STATUS_CANCELED];
       } else {
         throw new Exception('Cannot cancel from this status', 1);
       }
     } else if ($action instanceof  ActionRespond) {
-      if ($this->status === self::STATUS_NEW) {
+      if ($this->status == self::STATUS_NEW) {
         return [self::STATUS_IN_PROGRESS];
       } else {
         throw new Exception('Cannot respond from this status', 1);
       }
     } else if ($action instanceof ActionDecline) {
-      if ($this->status === self::STATUS_IN_PROGRESS) {
+      if ($this->status == self::STATUS_IN_PROGRESS) {
         return [self::STATUS_FAILED];
       } else {
         throw new Exception('Cannot fail from this status', 1);
       }
     } else if ($action instanceof ActionComplete) {
-      if ($this->status === self::STATUS_IN_PROGRESS) {
+      if ($this->status == self::STATUS_IN_PROGRESS) {
         return [self::STATUS_COMPLETED];
       } else {
         throw new Exception('Cannot complete from this status', 1);
@@ -88,37 +94,7 @@ class Task {
     } else throw new Exception('Unknown action', 1);
   }
 
-  /**
-   * Возвращает список доступных действий с учётом статуса и роли актора
-   * @param string $status Статус, для которого необходимо получить список доступных действий.
-   * Константа класса, начинающаяся со STATUS_
-   * @param string $role Роль субъекта, изменяющего статус
-   * Константа класса, начинающаяся с ROLE_
-   * @return array Массив доступных действий
-   */
-  public function getAvaliableActionsNoCheck($status, $role) {
-    switch ($status) {
-      case self::STATUS_COMPLETED:
-        return [];
-      case self::STATUS_FAILED:
-        return [];
-      case self::STATUS_NEW:
-        if ($role === self::ROLE_CLIENT) return [new ActionCancel()];
-        if ($role === self::ROLE_CONTRACTOR) return [new ActionRespond()];
-        throw new Exception('Unknown role', 1);
-        break;
-      case self::STATUS_CANCELED:
-        return [];
-      case self::STATUS_IN_PROGRESS:
-        if ($role === self::ROLE_CLIENT) return [new ActionComplete()];
-        if ($role === self::ROLE_CONTRACTOR) return [new ActionDecline()];
-        throw new Exception('Unknown role', 1);
-      default:
-        throw new Exception('Unknown status', 1);
-        break;
-    }
-  }
-  
+
   /**
    * Возвращает список доступных действий с учётом статуса, роли актора и текущего пользователя
    * @param int $currentUserId Идентификатор текущего пользователя
@@ -129,7 +105,39 @@ class Task {
    * @return array Массив доступных действий
    */
   public function getAvaliableActions($status, $role, $currentUserId) {
-    $actions = $this->getAvaliableActionsNoCheck($status, $role);
+    $actions = [];
+    switch ($status) {
+      case self::STATUS_COMPLETED:
+        return [];
+      case self::STATUS_FAILED:
+        return [];
+      case self::STATUS_NEW:
+        if ($role == self::ROLE_CLIENT) {
+          $actions = [new ActionCancel()];
+          break;
+        }
+        if ($role == self::ROLE_CONTRACTOR) {
+          $actions = [new ActionRespond()];
+          break;
+        }
+        throw new Exception('Unknown role', 1);
+        break;
+      case self::STATUS_CANCELED:
+        return [];
+      case self::STATUS_IN_PROGRESS:
+        if ($role == self::ROLE_CLIENT) {
+          $actions = [new ActionComplete()];
+          break;
+        }
+        if ($role == self::ROLE_CONTRACTOR) {
+          $actions = [new ActionDecline()];
+          break;
+        }
+        throw new Exception('Unknown role', 1);
+      default:
+        throw new Exception('Unknown status', 1);
+        break;
+    }
     $clientId = $this->clientId;
     $contractorId = $this->contractorId;
     return array_filter($actions,
